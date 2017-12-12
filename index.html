@@ -1,0 +1,301 @@
+<!doctype html>
+<html class='no-js'>
+
+<head>
+  <meta charset='utf-8'>
+  <title>Together Form Renderer</title>
+  <meta name='viewport' content='width=device-width'>
+  <link rel='stylesheet' href='css/angular-json-explorer.min.css'>
+  <link rel='stylesheet' href='css/bootstrap.min.css' />
+  <link rel='stylesheet' href='css/font-awesome.min.css' />
+  <link rel='stylesheet' href='css/formio-full.css' />
+  <link rel='stylesheet' href='css/jsoneditor.css' />
+  <style>
+    #jsoneditor {
+      height: 500px;
+    }
+
+    .browsehappy {
+      display: block;
+      width: 100%;
+      height: 100px;
+      background-color: #f2dede;
+      margin: 0 0 10px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 22px;
+      line-height: 1.4;
+      color: #333;
+      padding-top: 15px;
+      vertical-align: middle;
+    }
+
+    .browsehappy span {
+      vertical-align: middle;
+      margin: 20px 20px 20px 20px;
+      background: url('https://cdn.rawgit.com/alrra/browser-logos/master/internet-explorer/internet-explorer_64x64.png') no-repeat;
+      height: 64px;
+      width: 64px;
+      display: inline-block;
+    }
+
+    .formbuilder {
+      height: 600px;
+    }
+
+    .formcomponents {
+      width: 30%;
+    }
+
+    .formarea {
+      width: 70%;
+    }
+
+    .component-settings .nav-link {
+      font-size: 0.6em;
+    }
+
+    .jsonviewer {
+      max-height: auto;
+      overflow: scroll;
+    }
+
+    .form-type-select {
+      display: inline-block;
+      width: 100px;
+      height: 28px;
+      vertical-align: top;
+    }
+
+    .overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      opacity: 0.6;
+      z-index: 100;
+    }
+
+    .wrapper {
+      width: 100px;
+      height: 100px;
+      background: transparent;
+      display: flex;
+      flex-flow: row wrap;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 3px;
+    }
+
+    .box {
+      width: 50%;
+      height: 50%;
+      flex: 50%;
+      transition: 0.5s;
+      border: 2px solid white;
+    }
+
+    .box:nth-child(1) {
+      animation: load 1s infinite;
+    }
+
+    .box:nth-child(2) {
+      animation: load2 1s infinite;
+      animation-delay: 0.2s;
+    }
+
+    .box:nth-child(3) {
+      animation: load3 1s infinite;
+      animation-delay: 0.7s;
+    }
+
+    .box:nth-child(4) {
+      animation: load4 1s infinite;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes load {
+      0% {
+        background: rgba(231, 76, 60, 0);
+      }
+      30% {
+        background: rgb(231, 76, 60);
+      }
+
+      100% {
+        background: rgba(231, 76, 60, 0);
+      }
+    }
+
+    @keyframes load2 {
+      0% {
+        background: rgba(46, 204, 113, 0);
+      }
+      30% {
+        background: rgb(46, 204, 113);
+      }
+
+      100% {
+        background: rgba(46, 204, 113, 0);
+      }
+    }
+
+    @keyframes load3 {
+      0% {
+        background: rgba(230, 126, 34, 0);
+      }
+      30% {
+        background: rgb(230, 126, 34);
+      }
+
+      100% {
+        background: rgba(230, 126, 34, 0);
+      }
+    }
+
+    @keyframes load4 {
+      0% {
+        background: rgba(241, 196, 15, 0);
+      }
+      30% {
+        background: rgb(241, 196, 15);
+      }
+
+      100% {
+        background: rgba(241, 196, 15, 0);
+      }
+    }
+  </style>
+</head>
+
+<body ng-app='formRenderer'>
+  <!-- BROWSE HAPPY BEGINS HERE -->
+  <div class="overlay">
+    <div class="wrapper">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+  </div>
+  <div class='jumbotron'>
+    <div class='container text-center'>
+      <h1>TOGETHER FORM RENDERER</h1>
+    </div>
+  </div>
+  <div class='page-content' ng-app='formioApp'>
+    <div class='container-fluid'>
+      <div class='row'>
+        <div class='col-12 col-sm-12 col-lg-6'>
+          <pre class='bg-info text-center'><code><h4>JSON FORM EDITOR</h4></code></pre>
+          <div class='well jsonviewer'>
+            <p>Load a JSON document:
+              <input type="file" id="loadDocument" value="Load" />
+            </p>
+            <p>Save a JSON document:
+              <input type="button" id="saveDocument" value="Save" />
+              <button ng-click="preViewFunc()">Preview</button>
+            </p>
+            <div class="setAlert"></div>
+
+            <div id="jsoneditor"></div>
+          </div>
+        </div>
+        <div class='col-12 col-sm-12 col-lg-6'>
+
+          <pre class='text-center bg-info'><code><h4>Renders as a Form</h4></code></pre>
+          <div class='well' style='background-color: #fdfdfd;'>
+
+            <formio form='form'></formio>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src='js/ckeditor.js'></script>
+  <script src='js/signature_pad.min.js'></script>
+  <script src='js/formio-full.js'></script>
+  <script src='js/loadJsonForm.js'></script>
+  <script src='js/lodash.min.js'></script>
+  <script src='js/angular-json-explorer.min.js'></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/filereader.js"></script>
+  <script src="js/FileSaver.min.js"></script>
+  <script src="js/jsoneditor.js"></script>
+  <script type='text/javascript'>
+    $(document).ready(function () {
+      $(".overlay").fadeOut(3000);
+    });
+    // create the editor
+    var editor = new JSONEditor(document.getElementById('jsoneditor'), { mode: "code" });
+
+    // Load a JSON document
+    FileReaderJS.setupInput(document.getElementById('loadDocument'), {
+      readAsDefault: 'Text',
+      on: {
+        load: function (event, file) {
+          editor.setText(event.target.result);
+        }
+      }
+    });
+
+    // Save a JSON document
+    document.getElementById('saveDocument').onclick = function () {
+
+      if (!(IsJsonString() === 0)) {
+        AlertInvalid(IsJsonString());
+      }
+      else {
+        // Save Dialog
+        fname = window.prompt("Save as...");
+
+        // Check json extension in file name
+        if (fname.indexOf(".") == -1) {
+          fname = fname + ".json";
+        } else {
+          if (fname.split('.').pop().toLowerCase() == "json") {
+            // Nothing to do
+          } else {
+            fname = fname.split('.')[0] + ".json";
+          }
+        }
+        var blob = new Blob([editor.getText()], { type: 'application/json;charset=utf-8' });
+        saveAs(blob, fname);
+      }
+
+    };
+
+    function IsJsonString() {
+      var state = 0;
+      try {
+        JSON.parse(editor.getText());
+      } catch (e) {
+        return 2;
+      }
+
+      return editor.getText() != "{}" ? 0 : 1
+    }
+
+    function AlertInvalid(state) {
+      state === 2
+        ? $(".setAlert").append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><strong>Danger!</strong> Invalid Json Format.</div></div>')
+        : $(".setAlert").append('<div class="alert alert-info alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><strong>Info! </strong>Json is emtpy</div></div>');
+    }
+  </script>
+  <script type='text/javascript'>
+    angular
+      .module('formRenderer', ['ui.bootstrap', 'ui.select', 'formio', 'ngJsonExplorer'])
+      .run(['$rootScope', '$timeout', function ($rootScope, $timeout) {
+        $rootScope.jsonCollapsed = true;
+        $timeout(function () {
+          $rootScope.jsonCollapsed = false;
+        }, 200);
+        $rootScope.preViewFunc = function () {
+          IsJsonString() === 0 ? $rootScope.form = JSON.parse(editor.getText()) : AlertInvalid(IsJsonString());
+        };
+      }]);
+  </script>
+</body>
+
+</html>
